@@ -5,7 +5,7 @@ class Coin(object):
 
     def __init__(self, coin_id):
         self.coin_id = coin_id
-        self.value = COINS[self.coin_id]
+        self.value = self.COINS[self.coin_id]
 
     def __str__(self):
         rep = str(self.value)
