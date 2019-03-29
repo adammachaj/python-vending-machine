@@ -14,7 +14,10 @@ class Collector(item.Item):
         return rep
 
     def add_item(self):
-        self.items.append(1)
-        
+        if self.quantity < 11:
+            self.items.append(1)
+        else:
+            print("Not enough slots in collector")
+
     def remove_items(self):
         self.items.clear()
