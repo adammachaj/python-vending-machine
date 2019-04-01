@@ -3,14 +3,16 @@ import item, collector, coin
 class Machine(object):
     """Vending machine"""
 
-    ITEMS = [item.Item(1, "Pepsi"), item.Item(2, "Cola"), item.Item(3, "Sprite")]
+    ITEMS = [item.Item("Pepsi"), item.Item("Cola"), item.Item("Sprite")]
     snacks = {}
     coins = {"1 gr" : 5, "2 gr" : 5, "5 gr" : 5,
              "10 gr" : 5, "20 gr" : 5, "50 gr" : 5,
              "1 zl" : 5, "2 zl" : 5, "5 zl" : 5}
 
 
-    def __init__(self):
+    def __init__(self, id):
+        self.id = id
+
         self.snacks = {n : collector.Collector(n) for n in range(30, 35)}
 
         self.coins =   {coin.Coin("1 gr") : 5, coin.Coin("2 gr") : 5,coin.Coin("5 gr") : 5,
@@ -23,7 +25,8 @@ class Machine(object):
         self.sum = 0
 
     def __str__(self):
-        rep = "Sodas:\n" + str(self.snacks) + "\nCoins:\n" + str(self.coins)
+        #rep = str(id) + "\n" + "Sodas:\n" + str(self.snacks) + "\nCoins:\n" + str(self.coins)
+        rep = str(id) + "\n" + "Sodas:\n" + str(self.snacks) + "\nCoins:\n" + str(self.coins)
         return rep
 
     def insert_coin(self, coin_id):
@@ -38,4 +41,3 @@ class Machine(object):
             print(self.money_in)
             self.sum += coin.Coin.COINS[coin_id]
             print(self.sum)
-
