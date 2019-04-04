@@ -1,39 +1,43 @@
-import item
+import item, collector, coin
 
-class Collector(item.Item):
-    """Soda collector"""
+class Machine(object):
+    """Vending machine"""
 
-    def __init__(self, code, price = 2.0):
-        self.code = code
-        self.price = price
-        self.quantity = 10
-        self.items = []
+    ITEMS = [item.Item("Pepsi"), item.Item("Cola"), item.Item("Sprite")]
+    snacks = {}
+    coins = {"1 gr" : 5, "2 gr" : 5, "5 gr" : 5,
+             "10 gr" : 5, "20 gr" : 5, "50 gr" : 5,
+             "1 zl" : 5, "2 zl" : 5, "5 zl" : 5}
+
+
+    def __init__(self, id):
+        self.id = id
+
+        self.snacks = {n : collector.Collector(n) for n in range(30, 35)}
+
+        self.coins =   {coin.Coin("1 gr") : 5, coin.Coin("2 gr") : 5,coin.Coin("5 gr") : 5,
+                        coin.Coin("10 gr"): 5, coin.Coin("20 gr") : 5,coin.Coin("50 gr") : 5,
+                        coin.Coin("1 zl"): 5,coin.Coin("2 zl") : 5,coin.Coin("5 zl") : 5}
+
+        self.money_in = {"1 gr" : 0, "2 gr" : 0, "5 gr" : 0,
+                            "10 gr" : 0, "20 gr" : 0, "50 gr" : 0,
+                             "1 zl" : 0, "2 zl" : 0, "5 zl" : 0}
+        self.sum = 0
 
     def __str__(self):
-        if not self.items:
-            rep = "No items" + "\tCena: " + str(self.price) + "\nIlość: " + str(len(self.items))
-        else:
-            rep = "Name: " + str(self.items[0]) + "\tCena: " + str(self.price) + "\nIlość: " + str(len(self.items))
+        #rep = str(id) + "\n" + "Sodas:\n" + str(self.snacks) + "\nCoins:\n" + str(self.coins)
+        rep = str(id) + "\n" + "Sodas:\n" + str(self.snacks) + "\nCoins:\n" + str(self.coins)
         return rep
 
-    def add_item(self, i):
-        if self.quantity < 11:
-            self.items.append(i)
-        else:
-            print("Not enough slots in collector")
+    def insert_coin(self, coin_id):
+        return (coin_id, coin.Coin.COINS[coin_id])
 
-    def remove_items(self):
-        self.items.clear()
-
-    def get_item(self):
-        if self.items[0] == None:
-            return "No sodas here"
-        else:
-            return self.items[0].name
-
-    def buy_item(self):
-        if self.items[0] == None:
-            return "No sodas here"
-        else:
-            print(self.items[0])
-            self.items.pop(0)
+    def buy(self):
+        while True:
+            coin_id = input("Coin: ")
+            current_coin = self.insert_coin(coin_id)
+            print(current_coin)
+            self.money_in[coin_id] += 1
+            print(self.money_in)
+            self.sum += coin.Coin.COINS[coin_id]
+            print(self.sum)
