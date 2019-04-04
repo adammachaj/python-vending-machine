@@ -10,7 +10,10 @@ class Collector(item.Item):
         self.items = []
 
     def __str__(self):
-        rep = "Name: " + str(self.items[0]) + "\tCena: " + str(self.price)
+        if not self.items:
+            rep = "No items" + "\tCena: " + str(self.price) + "\nIlość: " + str(len(self.items))
+        else:
+            rep = "Name: " + str(self.items[0]) + "\tCena: " + str(self.price) + "\nIlość: " + str(len(self.items))
         return rep
 
     def add_item(self, i):
@@ -27,3 +30,10 @@ class Collector(item.Item):
             return "No sodas here"
         else:
             return self.items[0].name
+
+    def buy_item(self):
+        if self.items[0] == None:
+            return "No sodas here"
+        else:
+            print(self.items[0])
+            self.items.pop(0)
