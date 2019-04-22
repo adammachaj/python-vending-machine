@@ -1,5 +1,6 @@
 import machine, item, collector, coin
 from tkinter import *
+from operator import itemgetter
 
 machine1 = machine.Machine(1)
 machine1.snacks[30].add_item(item.Item("Cola"))
@@ -90,6 +91,7 @@ class Application(Frame):
         self.fivz = Button(self, text=" 5zl ", font=("Arial Bold", 15), command=lambda: self.add_coin("5 zl"))
         self.fivz.grid(row=5, column=15, columnspan = 1)
 
+
     def add_coin(self, value):
         money = float(self.credit["text"])
         machine1.money_in[value] += 1
@@ -98,8 +100,6 @@ class Application(Frame):
 
     def change_value(self, number):
         self.code_lbl["text"] += number
-        if self.code_lbl["text"] == "123":
-            print("correct")
 
     def cancel_value(self):
         text = self.code_lbl["text"]
@@ -121,12 +121,24 @@ class Application(Frame):
             self.code_lbl["text"] = ""
             self.bought_lbl["text"] = bought_item
             self.update_widgets()
-            self.change()
+            self.change(round((float(self.credit["text"]) - machine1.snacks[kod].get_price()), 2))
+            #self.credit["text"] = round((float(self.credit["text"]) - machine1.snacks[kod].get_price()), 2)
+            self.credit["text"] = 0.0
 
         else:
             pass
 
-    def change(self):
+    def change(self, rest):
+
+        change =    {
+                    "1 gr" : 0, "2 gr" : 0, "5 gr" : 0,
+                    "10 gr" : 0, "20 gr" : 0, "50 gr" : 0,
+                    "1 zl" : 0, "2 zl" : 0, "5 zl" : 0
+                    }
+
+
+        priority = ["1 gr", "2 gr", "5 gr", "10 gr", "20 gr", "50 gr", "1 zl", "2 zl", "5 zl"]
+        print(priority.reverse())
 
         for i in machine1.money_in:
             machine1.coins[i] += machine1.money_in[i]
@@ -134,6 +146,35 @@ class Application(Frame):
             for j in machine1.money_in:
                 machine1.money_in[j] = 0
 
+        for i in priority:
+
+            print(i + "\t reszta: " + str(rest))
+
+            if rest is 0:
+                print("Change: " + change)
+                break
+
+            if rest is change[i]:
+                change[i] += 1
+                print("Change: " + change)
+                break
+
+            if rest > change[i]:
+                rest -= coin.Coin.COINS[i]
+                change[i] += 1
+
+            else:
+                pass
+
+"""
+    def add_to_change(self, i, rest, change):
+        if rest >= coin.Coin.COINS[change[i]]:
+            rest -= coin.Coin.COINS[change[i]]
+            change[i] += 1
+
+        else:
+            pass
+"""
 
 
 root = Tk()
