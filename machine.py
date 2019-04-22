@@ -15,13 +15,18 @@ class Machine(object):
 
         self.snacks = {n : collector.Collector(n) for n in range(30, 35)}
 
-        self.coins =   {coin.Coin("1 gr") : 5, coin.Coin("2 gr") : 5,coin.Coin("5 gr") : 5,
-                        coin.Coin("10 gr"): 5, coin.Coin("20 gr") : 5,coin.Coin("50 gr") : 5,
-                        coin.Coin("1 zl"): 5,coin.Coin("2 zl") : 5,coin.Coin("5 zl") : 5}
+        self.coins =   {
+                        "1 gr" : 5, "2 gr" : 5, "5 gr" : 5,
+                        "10 gr" : 5, "20 gr" : 5, "50 gr" : 5,
+                        "1 zl" : 5, "2 zl" : 5, "5 zl" : 5
+                        }
 
-        self.money_in = {"1 gr" : 0, "2 gr" : 0, "5 gr" : 0,
-                            "10 gr" : 0, "20 gr" : 0, "50 gr" : 0,
-                             "1 zl" : 0, "2 zl" : 0, "5 zl" : 0}
+        self.money_in = {
+                        "1 gr" : 0, "2 gr" : 0, "5 gr" : 0,
+                        "10 gr" : 0, "20 gr" : 0, "50 gr" : 0,
+                        "1 zl" : 0, "2 zl" : 0, "5 zl" : 0
+                        }
+
         self.sum = 0
 
     def __str__(self):
