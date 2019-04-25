@@ -116,17 +116,32 @@ class Application(Frame):
         self.update_widgets()
         kod = int(self.code_lbl.cget("text"))
 
-        if float(self.credit["text"]) >= machine1.snacks[kod].get_price():
-            bought_item = machine1.snacks[kod].buy_item()
-            self.code_lbl["text"] = ""
-            self.bought_lbl["text"] = bought_item
-            self.update_widgets()
-            self.change(round((float(self.credit["text"]) - machine1.snacks[kod].get_price()), 2))
-            #self.credit["text"] = round((float(self.credit["text"]) - machine1.snacks[kod].get_price()), 2)
-            self.credit["text"] = 0.0
+        if kod < 30 or kod > 50:
+            self.popupmsg("Zly kod")
+
+        elif len(machine1.snacks[kod].items) == 0:
+            self.popupmsg("No sodas here")
+
+        elif float(self.credit["text"]) >= machine1.snacks[kod].get_price():
+
+            for i in machine1.money_in:
+                machine1.coins[i] += machine1.money_in[i]
+
+            if machine1.sum < round((float(self.credit["text"]) - machine1.snacks[kod].get_price()), 2):
+                self.popupmsg("Tylko odliczona gotówka")
+
+            else:
+                bought_item = machine1.snacks[kod].buy_item()
+                self.code_lbl["text"] = ""
+                self.bought_lbl["text"] = bought_item
+                self.update_widgets()
+                self.change(round((float(self.credit["text"]) - machine1.snacks[kod].get_price()), 2))
+                #self.credit["text"] = round((float(self.credit["text"]) - machine1.snacks[kod].get_price()), 2)
+                self.credit["text"] = 0.0
 
         else:
-            pass
+            self.popupmsg("Not enough money, price is: " + str(machine1.snacks[kod].get_price()) + " zl")
+
 
     def change(self, rest):
 
@@ -137,44 +152,42 @@ class Application(Frame):
                     }
 
 
-        priority = ["1 gr", "2 gr", "5 gr", "10 gr", "20 gr", "50 gr", "1 zl", "2 zl", "5 zl"]
-        print(priority.reverse())
+        priority = ["5 zl", "2 zl", "1 zl", "50 gr", "20 gr", "10 gr", "5 gr", "2 gr", "1 gr"]
+        print(priority)
 
-        for i in machine1.money_in:
-            machine1.coins[i] += machine1.money_in[i]
+       # for i in machine1.money_in:
+        #    machine1.coins[i] += machine1.money_in[i]
 
-            for j in machine1.money_in:
-                machine1.money_in[j] = 0
+        for j in machine1.money_in:
+            machine1.money_in[j] = 0
 
         for i in priority:
 
             print(i + "\t reszta: " + str(rest))
 
-            if rest is 0:
-                print("Change: " + change)
-                break
-
-            if rest is change[i]:
-                change[i] += 1
-                print("Change: " + change)
-                break
-
-            if rest > change[i]:
-                rest -= coin.Coin.COINS[i]
+            if rest > coin.Coin.COINS[i]:
+                rest = round((rest - coin.Coin.COINS[i]), 2)
                 change[i] += 1
 
-            else:
+            elif rest == coin.Coin.COINS[i]:
+                change[i] += 1
+                break
+
+            elif rest < coin.Coin.COINS[i]:
                 pass
 
-"""
-    def add_to_change(self, i, rest, change):
-        if rest >= coin.Coin.COINS[change[i]]:
-            rest -= coin.Coin.COINS[change[i]]
-            change[i] += 1
+            else:
+                break
 
-        else:
-            pass
-"""
+
+        print(change)
+
+
+    def popupmsg(self, msg):
+        popup = Tk()
+        popup.wm_title(msg)
+        label = Label(popup, text=msg, font=("Arial Bold", 15))
+        label.pack(side="top", fill="x", pady=10)
 
 
 root = Tk()
